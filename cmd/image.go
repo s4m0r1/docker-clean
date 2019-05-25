@@ -16,7 +16,6 @@ package cmd
 
 import (
 	"bufio"
-	"flag"
 	"fmt"
 	"os"
 	"os/exec"
@@ -27,8 +26,8 @@ import (
 // imageCmd represents the image command
 var imageCmd = &cobra.Command{
 	Use:   "image",
-	Short: "delete docker image",
-	Long:  `delete docker image`,
+	Short: "All delete docker image",
+	Long:  `All delete docker image`,
 	Args: func(cmd *cobra.Command, args []string) error {
 		// 引数になにもない場合
 		if len(args) < 1 {
@@ -48,13 +47,7 @@ var imageCmd = &cobra.Command{
 			} else if scanner.Text() == "n" || scanner.Text() == "N" {
 				fmt.Printf("Exit...\n")
 			}
-		// 	//引数がある場合
-		// } else {
-		// 	//引数のパース
-		// 	flag.Parse()
-		// 	args := flag.Args()
-		// 	fmt.Println(args)
-		// }
+		}
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {

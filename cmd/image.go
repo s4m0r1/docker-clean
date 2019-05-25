@@ -15,7 +15,9 @@
 package cmd
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 	"os/exec"
 
 	"github.com/spf13/cobra"
@@ -24,17 +26,27 @@ import (
 // imageCmd represents the image command
 var imageCmd = &cobra.Command{
 	Use:   "image",
-	Short: "View Docker image \"docker image ls\"",
-	Long:  `a`,
+	Short: "delete docker image",
+	Long:  `delete docker image`,
 	Args: func(cmd *cobra.Command, args []string) error {
+		// 引数になにもない場合
 		if len(args) < 1 {
-			out, err := exec.Command("docker", "image", "ls").Output()
-			if err == nil {
-				fmt.Printf("%s\n", out)
-			} else {
-				fmt.Printf("%s　\n", err)
+			fmt.Print("Delete Docker image?[y/n]: ")
+			scanner := bufio.NewScanner(os.Stdin)
+			scanner.Scan()
+			//　[y/n]
+			if scanner.Text() == "y" || scanner.Text() == "Y" {
+				// docker image 全削除
+				cmdstr := "docker images -aq | xargs docker rmi -f"
+				out, err := exec.Command("sh", "-c", cmdstr).Output()
+				if out != nil {
+					fmt.Printf("%s", out)
+				} else {
+					fmt.Printf("%s", err)
+				}
+			} else if scanner.Text() == "n" || scanner.Text() == "N" {
+				fmt.Printf("Exit...\n")
 			}
-			return nil
 		}
 		return nil
 	},

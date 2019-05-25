@@ -15,7 +15,10 @@
 package cmd
 
 import (
+	"bufio"
 	"fmt"
+	"os"
+	"os/exec"
 
 	"github.com/spf13/cobra"
 )
@@ -24,9 +27,31 @@ import (
 var volumeCmd = &cobra.Command{
 	Use:   "volume",
 	Short: "All delete docker volume",
-	Long: `All delete docker volume`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("volume called")
+	Long:  `All delete docker volume`,
+	Args: func(cmd *cobra.Command, args []string) error {
+		// 引数になにもない場合
+		if len(args) < 1 {
+			fmt.Print("Delete Docker volume?[y/n]: ")
+			scanner := bufio.NewScanner(os.Stdin)
+			scanner.Scan()
+			//　[y/n]
+			if scanner.Text() == "y" || scanner.Text() == "Y" {
+				// docker image 全削除
+				cmdstr := "docker volume ls -q | xargs docker volume rm -f"
+				out, err := exec.Command("sh", "-c", cmdstr).Output()
+				if out != nil {
+					fmt.Printf("%s", out)
+				} else {
+					fmt.Printf("%s", err)
+				}
+			} else if scanner.Text() == "n" || scanner.Text() == "N" {
+				fmt.Printf("Exit...\n")
+			}
+		}
+		return nil
+	},
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return nil
 	},
 }
 

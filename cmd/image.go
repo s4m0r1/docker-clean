@@ -16,6 +16,7 @@ package cmd
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"os"
 	"os/exec"
@@ -47,7 +48,13 @@ var imageCmd = &cobra.Command{
 			} else if scanner.Text() == "n" || scanner.Text() == "N" {
 				fmt.Printf("Exit...\n")
 			}
-		}
+		// 	//引数がある場合
+		// } else {
+		// 	//引数のパース
+		// 	flag.Parse()
+		// 	args := flag.Args()
+		// 	fmt.Println(args)
+		// }
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {

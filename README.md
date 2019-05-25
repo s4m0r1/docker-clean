@@ -9,9 +9,14 @@ go触ってみたくて作りました〜
 ライブラリに[cobra](https://github.com/spf13/cobra)を使用してます
 
 
-## 実装済みのコマンド
+## できること
 
-- `docker-clean image`
-> 第２引数に何も渡さなければimageの一覧を出します
+|引数|機能|
+|:--|:-:|
+|all|全削除(image, container, volume)|
+|container|コンテナ全削除|
+|image|イメージ全削除|
+|volume|ボリューム全削除|
+|||
 
 

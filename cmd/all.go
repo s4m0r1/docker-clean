@@ -15,7 +15,10 @@
 package cmd
 
 import (
+	"bufio"
 	"fmt"
+	"os"
+	"os/exec"
 
 	"github.com/spf13/cobra"
 )
@@ -25,8 +28,46 @@ var allCmd = &cobra.Command{
 	Use:   "all",
 	Short: "All delete",
 	Long:  `All delete`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("all called")
+	Args: func(cmd *cobra.Command, args []string) error {
+		// 引数になにもない場合
+		if len(args) < 1 {
+			fmt.Print("All delete?[y/n]: ")
+			scanner := bufio.NewScanner(os.Stdin)
+			scanner.Scan()
+			//　[y/n]
+			if scanner.Text() == "y" || scanner.Text() == "Y" {
+				// docker container 全削除
+				cmdstr := "docker ps -aq | xargs docker rm -f"
+				outCon, errCon := exec.Command("sh", "-c", cmdstr).Output()
+				if outCon != nil {
+					fmt.Printf("%s", outCon)
+				} else {
+					fmt.Printf("%s", errCon)
+				}
+				// docker image 全削除
+				cmdstrImage := "docker images -aq | xargs docker rmi -f"
+				outImg, errImg := exec.Command("sh", "-c", cmdstrImage).Output()
+				if outImg != nil {
+					fmt.Printf("%s", outImg)
+				} else {
+					fmt.Printf("%s", errImg)
+				}
+				// docker volume 全削除
+				cmdstrVolume := "docker volume ls -q | xargs docker volume rm -f"
+				outVol, errVol := exec.Command("sh", "-c", cmdstrVolume).Output()
+				if outVol != nil {
+					fmt.Printf("%s", outVol)
+				} else {
+					fmt.Printf("%s", errVol)
+				}
+			} else if scanner.Text() == "n" || scanner.Text() == "N" {
+				fmt.Printf("Exit...\n")
+			}
+		}
+		return nil
+	},
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return nil
 	},
 }
 
